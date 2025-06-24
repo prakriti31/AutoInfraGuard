@@ -1,6 +1,11 @@
-# requirements.txt
 fastapi
 uvicorn
 scikit-learn
 pandas
 joblib
+evidently==0.4.15
+scipy
+jinja2
+matplotlib
+seaborn
+pdfkit

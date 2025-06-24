@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drift Detection Report</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 40px; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: center; }
+        th { background-color: #007acc; color: white; }
+        .drifted { background-color: #ffdddd; }
+        img { max-width: 600px; margin: 10px 0; display: block; }
+        h2 { margin-top: 60px; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Drift Detection Report</h1>
+
+    <h2>📊 Summary Table</h2>
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>Statistical Test</th>
+            <th>p-Value</th>
+            <th>Drift Detected</th>
+        </tr>
+        {% for item in features %}
+        <tr class="{{ 'drifted' if item.drifted == 'Yes' else '' }}">
+            <td>{{ item.feature }}</td>
+            <td>{{ item.test }}</td>
+            <td>{{ item.p_value }}</td>
+            <td>{{ item.drifted }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>📈 Visual Distributions</h2>
+    {% for img in images %}
+        <h3>{{ img.feature }}</h3>
+        <img src="data:image/png;base64,{{ img.image }}" alt="Plot for {{ img.feature }}">
+    {% endfor %}
+
+</body>
+</html>
