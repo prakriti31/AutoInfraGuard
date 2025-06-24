@@ -1,13 +1,6 @@
 # AutoInfraGuard
 Self-Healing ML Pipeline Debugger for Production Systems
 
-To stand out for an **ML Infra role at LinkedIn USA**, you need a project that shows:
-
-* Deep systems thinking (scalability, optimization, infra design)
-* ML/NLP depth (model lifecycle, distributed training, serving)
-* Practical value (real-world utility or LinkedIn-aligned goals like job matching, career paths, spam moderation, or user content optimization)
-
----
 
 ## 🔥 Project Idea: **AutoInfraGuard – Self-Healing ML Pipeline Debugger for Production Systems**
 
