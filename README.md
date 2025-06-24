@@ -228,3 +228,125 @@ Visual + Alert system to monitor everything.
 
 ---
 
+Here’s a clean and concise **README** section with instructions to run **Phase 1** of your **AutoInfraGuard** project.
+
+---
+
+## 🚀 AutoInfraGuard – Phase 1: ML Pipeline with FastAPI
+
+This phase sets up a simple modular ML pipeline for predicting salary based on job title, education, and experience. It includes model training, an inference API using FastAPI, and Docker support.
+
+---
+
+### 📁 Project Structure
+
+```
+AutoInfraGuard/
+├── app/
+│   ├── model.py         # Train & save the model
+│   ├── predict.py       # Predict function using trained model
+│   ├── main.py          # FastAPI app
+│   └── model.joblib     # Saved model (after training)
+├── data/
+│   └── job_data.csv     # Sample training data
+├── requirements.txt     # Python dependencies
+├── Dockerfile           # (Optional) Docker support
+└── README.md
+```
+
+---
+
+### 🔧 Step-by-Step Setup
+
+#### ✅ 1. Clone the Repo & Create Virtual Environment
+
+```bash
+git clone <your-repo-url>
+cd AutoInfraGuard
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### ✅ 2. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+> Make sure `requirements.txt` contains:
+>
+> ```
+> fastapi
+> uvicorn
+> pandas
+> scikit-learn
+> joblib
+> ```
+
+#### ✅ 3. Prepare Dataset
+
+Make sure you have the dataset at `data/job_data.csv`:
+
+```csv
+experience,education,job_title,salary
+3,Bachelor,Data Scientist,90000
+5,Master,ML Engineer,120000
+2,Bachelor,ML Engineer,85000
+6,PhD,AI Researcher,150000
+```
+
+#### ✅ 4. Train the Model
+
+```bash
+python app/model.py
+```
+
+This will generate `app/model.joblib`.
+
+#### ✅ 5. Start the FastAPI Server
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Visit the API docs:
+
+```
+http://127.0.0.1:8000/docs
+```
+
+Try this input on the Swagger UI:
+
+```json
+{
+  "experience": 4,
+  "education": "Master",
+  "job_title": "ML Engineer"
+}
+```
+
+You’ll get a predicted salary like:
+
+```json
+{"predicted_salary": 112500.0}
+```
+
+---
+
+### 🐳 (Optional) Run with Docker
+
+```bash
+docker build -t autoinfraguard .
+docker run -p 8000:8000 autoinfraguard
+```
+
+---
+
+### ✅ Done!
+
+You’ve completed Phase 1: a working ML pipeline with REST API interface.
+You're ready to move on to Phase 2: **Drift/Skew detection + monitoring.**
+
+---
+
+Let me know if you'd like this written directly as a `README.md` file or zipped with the code!
