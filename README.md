@@ -333,6 +333,12 @@ You’ll get a predicted salary like:
 
 ---
 
+#### 6. Generate reports
+
+``` python -c "from app.drift_detector import generate_combined_drift_report; generate_combined_drift_report('data/job_data.csv', 'data/live_data.csv', 'reports/drift_report.html')"```
+
+✅ Combined drift report saved at reports/drift_report.html
+
 ### 🐳 (Optional) Run with Docker
 
 ```bash
