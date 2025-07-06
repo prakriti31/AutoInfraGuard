@@ -16,3 +16,5 @@ COPY . .
 
 # Default command to run the drift detector
 CMD ["python", "app/drift_detector.py"]
+CMD ["uvicorn", "app.inference_api:app", "--host", "0.0.0.0", "--port", "8000"]
+

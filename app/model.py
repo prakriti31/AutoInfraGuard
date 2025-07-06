@@ -14,13 +14,19 @@ def train():
     X = df[["experience", "education", "job_title"]]
     y = df["salary"]
 
+    # Define categorical and numerical columns
+    categorical_cols = ["education", "job_title"]
+    numerical_cols = ["experience"]
+
+    # Preprocessor with OneHotEncoder (with ignore for unknowns)
     preprocessor = ColumnTransformer(
         transformers=[
-            ("edu_job", OneHotEncoder(), ["education", "job_title"])
+            ("edu_job", OneHotEncoder(handle_unknown="ignore"), categorical_cols)
         ],
-        remainder="passthrough"
+        remainder="passthrough"  # Pass 'experience' through
     )
 
+    # Full pipeline
     pipeline = Pipeline([
         ("preprocessor", preprocessor),
         ("model", LinearRegression())
@@ -28,8 +34,16 @@ def train():
 
     pipeline.fit(X, y)
 
-    model_path = os.path.join("app", "model.joblib")
-    joblib.dump(pipeline, model_path)
+    # Save pipeline and metadata
+    os.makedirs("models", exist_ok=True)
+    model_path = os.path.join("models", "salary_model.pkl")
+
+    joblib.dump({
+        "model": pipeline,
+        "columns": X.columns.tolist(),        # For schema enforcement
+        "categorical": categorical_cols,
+        "numerical": numerical_cols
+    }, model_path)
 
     print(f"✅ Model trained and saved at: {model_path}")
 

@@ -231,123 +231,251 @@ This phase sets up a simple modular ML pipeline for predicting salary based on j
 
 ---
 
-### 📁 Project Structure
+## 📁 Project Structure
 
 ```
 AutoInfraGuard/
 ├── app/
-│   ├── model.py         # Train & save the model
-│   ├── predict.py       # Predict function using trained model
-│   ├── main.py          # FastAPI app
-│   └── model.joblib     # Saved model (after training)
+│   ├── inference_api.py       # FastAPI server with prediction & metrics API
+│   ├── metrics_logger.py      # Logs prediction metrics to SQLite DB
+│   ├── send_request_loop.py   # Simulates continuous POST requests to /predict
 ├── data/
-│   └── job_data.csv     # Sample training data
-├── requirements.txt     # Python dependencies
-├── Dockerfile           # (Optional) Docker support
-└── README.md
+│   └── job_data.csv           # Training data
+├── models/
+│   └── salary_model.pkl       # Saved ML pipeline with schema
+├── monitoring/
+│   └── metrics.db             # SQLite DB with 'predictions' table
+├── Dockerfile
+├── requirements.txt
+├── train_model.py             # Trains and exports the model
+└── README.md                  # Project guide (this file)
 ```
 
 ---
 
-### 🔧 Step-by-Step Setup
+## 🧠 1. Train the Model
 
-#### ✅ 1. Clone the Repo & Create Virtual Environment
-
-```bash
-git clone <your-repo-url>
-cd AutoInfraGuard
-python3 -m venv venv
-source venv/bin/activate
-```
-
-#### ✅ 2. Install Dependencies
+Before anything, train the model using the provided data.
 
 ```bash
-pip install -r requirements.txt
+python train_model.py
 ```
 
-> Make sure `requirements.txt` contains:
->
-> ```
-> fastapi
-> uvicorn
-> pandas
-> scikit-learn
-> joblib
-> ```
+This will create:
 
-#### ✅ 3. Prepare Dataset
-
-Make sure you have the dataset at `data/job_data.csv`:
-
-```csv
-experience,education,job_title,salary
-3,Bachelor,Data Scientist,90000
-5,Master,ML Engineer,120000
-2,Bachelor,ML Engineer,85000
-6,PhD,AI Researcher,150000
-```
-
-#### ✅ 4. Train the Model
-
-```bash
-python app/model.py
-```
-
-This will generate `app/model.joblib`.
-
-#### ✅ 5. Start the FastAPI Server
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Visit the API docs:
-
-```
-http://127.0.0.1:8000/docs
-```
-
-Try this input on the Swagger UI:
-
-```json
-{
-  "experience": 4,
-  "education": "Master",
-  "job_title": "ML Engineer"
-}
-```
-
-You’ll get a predicted salary like:
-
-```json
-{"predicted_salary": 112500.0}
-```
+* `models/salary_model.pkl` (scikit-learn pipeline)
+* Logs schema columns for encoding consistency
 
 ---
 
-#### ✅ 6. Generate reports
+## 🚀 2. Run FastAPI Server
+
+Start the API server:
 
 ```bash
-python -c "from app.drift_detector import generate_combined_drift_report; generate_combined_drift_report('data/job_data.csv', 'data/live_data.csv', 'reports/drift_report.html')"
+uvicorn app.inference_api:app --reload --port 8000
 ```
 
-✅ Combined drift report saved at reports/drift_report.html
+This will expose:
 
-### 🐳 (Optional) Run with Docker
+| Endpoint   | Method | Description                      |
+| ---------- | ------ | -------------------------------- |
+| `/predict` | POST   | Make a salary prediction         |
+| `/metrics` | GET    | View last 10 predictions from DB |
+
+---
+
+## 🧪 3. Make a Test Prediction
+
+Use `curl`:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"job_title": "Data Scientist", "education": "PhD", "experience": 4.7}'
+```
+
+✅ This will:
+
+* Return a predicted salary
+* Log the prediction in `monitoring/metrics.db` if logging is enabled
+
+---
+
+## 📊 4. Enable Logging (Metrics DB)
+
+The system logs all predictions to a SQLite database table named `predictions`.
+
+### 🔁 To simulate and test prediction logging:
+
+```bash
+python app/send_request_loop.py
+```
+
+This will send continuous mock requests to the server and log them.
+
+---
+
+## 📂 5. View Logs from SQLite
+
+You can directly inspect the logged data:
+
+```bash
+sqlite3 monitoring/metrics.db
+sqlite> SELECT * FROM predictions;
+```
+
+Each entry contains:
+
+* Timestamp
+* Input payload (job title, education, experience)
+* Predicted salary
+
+---
+
+## 🐳 6. Run with Docker
+
+### 🧱 Build Docker Image
 
 ```bash
 docker build -t autoinfraguard .
+```
+
+### ▶️ Run Container
+
+```bash
 docker run -p 8000:8000 autoinfraguard
+```
+
+By default, Docker runs the FastAPI server inside the container.
+
+### 🔄 Send Test Request
+
+On your host machine:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"job_title": "ML Engineer", "education": "Bachelor", "experience": 3.5}'
 ```
 
 ---
 
-### ✅ Done!
+## ⚙️ Dockerfile
 
-You’ve completed Phase 1: a working ML pipeline with REST API interface.
-You're ready to move on to Phase 2: **Drift/Skew detection + monitoring.**
+Make sure your `Dockerfile` looks like this:
+
+```dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["uvicorn", "app.inference_api:app", "--host", "0.0.0.0", "--port", "8000"]
+```
 
 ---
 
-Let me know if you'd like this written directly as a `README.md` file or zipped with the code!
+## 📦 requirements.txt
+
+```txt
+fastapi
+uvicorn
+pydantic
+scikit-learn
+joblib
+pandas
+requests
+```
+
+---
+
+## 🔐 Notes
+
+* SQLite file (`monitoring/metrics.db`) must persist across restarts if using Docker (use volumes).
+* You can mount `monitoring/` as a volume:
+
+  ```bash
+  docker run -p 8000:8000 -v $(pwd)/monitoring:/app/monitoring autoinfraguard
+  ```
+
+---
+
+## ✅ Optional: Reset DB Table
+
+```bash
+sqlite3 monitoring/metrics.db
+
+sqlite> DROP TABLE IF EXISTS predictions;
+
+sqlite> CREATE TABLE predictions (
+  timestamp TEXT,
+  job_title TEXT,
+  education TEXT,
+  experience REAL,
+  predicted_salary REAL
+);
+```
+
+---
+
+## 📬 API Reference
+
+### `/predict` — POST
+
+**Input JSON**:
+
+```json
+{
+  "job_title": "Data Scientist",
+  "education": "PhD",
+  "experience": 4.7
+}
+```
+
+**Response JSON**:
+
+```json
+{
+  "predicted_salary": 188340.35
+}
+```
+
+---
+
+### `/metrics` — GET
+
+**Returns** last 10 logged predictions.
+
+```json
+[
+  {
+    "timestamp": "2025-07-06T13:44:32.318264",
+    "job_title": "ML Engineer",
+    "education": "Bachelor",
+    "experience": 3.5,
+    "predicted_salary": 183423.64
+  },
+  ...
+]
+```
+
+---
+
+## 🧹 Troubleshooting
+
+| Issue                             | Fix                                                        |
+| --------------------------------- | ---------------------------------------------------------- |
+| `table predictions has no column` | Drop and recreate table manually (see above)               |
+| `/metrics` returns empty          | Ensure `/predict` is called and logging is enabled         |
+| Docker SQLite DB empty            | Use `-v $(pwd)/monitoring:/app/monitoring` to persist data |
+| Continuous logging not happening  | Run `send_request_loop.py` script or manually POST         |
+| `model["model"].predict` fails    | Ensure input encoding matches training pipeline            |
+
+---
+
+Let me know if you want me to generate this as a downloadable `README.md` file.
