@@ -1,0 +1,7 @@
+[2024-06-30 10:01:23] INFO: Starting pipeline...
+[2024-06-30 10:01:25] WARNING: Missing value for 'experience'
+[2024-06-30 10:01:28] ERROR: ValueError: could not convert string to float: 'N/A'
+Traceback (most recent call last):
+  File "train_model.py", line 20, in <module>
+    train_model()
+ValueError: could not convert string to float: 'N/A'

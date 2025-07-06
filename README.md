@@ -478,4 +478,43 @@ sqlite> CREATE TABLE predictions (
 
 ---
 
-Let me know if you want me to generate this as a downloadable `README.md` file.
+Great! Here's a clean and professional section you can add to your `README.md` to explain how to run the **logging-enabled training phase** in your project:
+
+---
+
+## 📝 How to Run: Model Training with Real-Time Logging
+
+### 🛠️ Train the Model
+
+Navigate to the project root and run the model training using:
+
+```bash
+python -m app.train_model
+```
+
+This will:
+
+* Load training data from `data/job_data.csv`
+* Train a `LinearRegression` model
+* Save the model to `models/salary_model.pkl`
+* Log progress and errors to `logs/train.log` in real-time
+
+### 📡 Live Log Monitoring (Optional)
+
+To watch logs update in real time:
+
+```bash
+tail -f logs/train.log
+```
+
+---
+
+### 🗂️ Output Files
+
+| File                      | Description                            |
+| ------------------------- | -------------------------------------- |
+| `models/salary_model.pkl` | Trained model pipeline (with metadata) |
+| `logs/train.log`          | Log file with real-time training logs  |
+
+---
+

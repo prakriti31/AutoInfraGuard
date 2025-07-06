@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log Summary Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 2rem; background: #fdf6f0; }
+        h2 { color: #cc3300; }
+        .section { margin-bottom: 2rem; }
+        pre { background: #fff0e6; padding: 1rem; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>📋 Log Summary Report</h1>
+    <p><strong>File:</strong> {{ summary.filename }}</p>
+    <p><strong>Generated at:</strong> {{ summary.timestamp }}</p>
+
+    <div class="section">
+        <h2>🚨 Errors ({{ summary.error_count }})</h2>
+        {% for error in summary.errors %}
+            <pre>{{ error }}</pre>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>⚠️ Warnings ({{ summary.warning_count }})</h2>
+        {% for warn in summary.warnings %}
+            <pre>{{ warn }}</pre>
+        {% endfor %}
+    </div>
+
+    <div class="section">
+        <h2>💥 Stack Traces ({{ summary.stacktrace_count }})</h2>
+        {% for trace in summary.stacktraces %}
+            <pre>{{ trace }}</pre>
+        {% endfor %}
+    </div>
+</body>
+</html>
