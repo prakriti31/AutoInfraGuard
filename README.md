@@ -516,5 +516,57 @@ tail -f logs/train.log
 | `models/salary_model.pkl` | Trained model pipeline (with metadata) |
 | `logs/train.log`          | Log file with real-time training logs  |
 
+
+1. ✅ Run the summarizer:
+
+```bash
+python -m app.log_summarizer logs/sample.log
+```
+
+2. ✅ Open the generated HTML report:
+
+```bash
+open reports/log_summary.html  # macOS
+# Or: start reports/log_summary.html  # Windows
+```
+
+---
+
+### 🔐 Set Your OpenAI Key
+
+Create a `.env` file or export the key:
+
+```bash
+export OPENAI_API_KEY=sk-xxxx
+```
+
+---
+
+### 💡 Example Output
+
+✅ Clean, visual report like:
+
+```
+📄 Log Summary: sample.log
+
+❌ Errors (3)
+- ImportError: cannot import name X
+  💡 Fix Suggestion: Try using 'from module import Y' instead...
+
+⚠️ Warnings (2)
+- Deprecated API used...
+
+📘 Tracebacks (1)
+- File "abc.py", line 24...
+```
+
+---
+
+### 🛠️ Dependencies
+
+```bash
+pip install openai jinja2
+```
+
 ---
 

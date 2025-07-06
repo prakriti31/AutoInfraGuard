@@ -11,3 +11,4 @@ seaborn
 pdfkit
 faker
 xhtml2pdf
+openai

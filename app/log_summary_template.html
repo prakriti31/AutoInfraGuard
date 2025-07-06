@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Log Summary Report</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 2rem; background: #fdf6f0; }
-        h2 { color: #cc3300; }
-        .section { margin-bottom: 2rem; }
-        pre { background: #fff0e6; padding: 1rem; border-radius: 5px; }
+        body { font-family: Arial, sans-serif; background: #f9f9f9; padding: 20px; }
+        .error { background: #ffe5e5; padding: 10px; margin: 10px 0; border-left: 5px solid red; }
+        .warning { background: #fff7e5; padding: 10px; margin: 10px 0; border-left: 5px solid orange; }
+        .traceback { background: #e5f1ff; padding: 10px; margin: 10px 0; border-left: 5px solid blue; white-space: pre-wrap; }
+        .suggestion { margin-top: 5px; font-size: 0.9em; background: #eaffea; padding: 8px; border-left: 3px solid green; }
+        h1 { color: #333; }
     </style>
 </head>
 <body>
-    <h1>📋 Log Summary Report</h1>
-    <p><strong>File:</strong> {{ summary.filename }}</p>
-    <p><strong>Generated at:</strong> {{ summary.timestamp }}</p>
+    <h1>📄 Log Summary: {{ summary.log_file }}</h1>
 
-    <div class="section">
-        <h2>🚨 Errors ({{ summary.error_count }})</h2>
-        {% for error in summary.errors %}
-            <pre>{{ error }}</pre>
-        {% endfor %}
-    </div>
+    <h2>🚨 Errors ({{ summary.errors | length }})</h2>
+    {% for err in summary.errors %}
+        <div class="error">
+            <strong>{{ err.type }}</strong>: {{ err.message }}
+            <div class="suggestion"><strong>Fix Suggestion:</strong><br>{{ err.suggestion }}</div>
+        </div>
+    {% endfor %}
 
-    <div class="section">
-        <h2>⚠️ Warnings ({{ summary.warning_count }})</h2>
-        {% for warn in summary.warnings %}
-            <pre>{{ warn }}</pre>
-        {% endfor %}
-    </div>
+    <h2>⚠️ Warnings ({{ summary.warnings | length }})</h2>
+    {% for warn in summary.warnings %}
+        <div class="warning">{{ warn }}</div>
+    {% endfor %}
 
-    <div class="section">
-        <h2>💥 Stack Traces ({{ summary.stacktrace_count }})</h2>
-        {% for trace in summary.stacktraces %}
-            <pre>{{ trace }}</pre>
-        {% endfor %}
-    </div>
+    <h2>📉 Tracebacks ({{ summary.tracebacks | length }})</h2>
+    {% for tb in summary.tracebacks %}
+        <div class="traceback">{{ tb }}</div>
+    {% endfor %}
 </body>
 </html>
