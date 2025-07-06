@@ -1,0 +1,9 @@
+<h2>🧠 Root Cause Analysis Report: {{ log_file }}</h2>
+
+{% for item in errors %}
+<div style="border: 1px solid #ccc; margin: 15px; padding: 10px;">
+  <p><b>❌ Error:</b> {{ item.error }}</p>
+  <p><b>📌 Category:</b> {{ item.category }}</p>
+  <p><b>💡 Fix Suggestion:</b> {{ item.suggestion }}</p>
+</div>
+{% endfor %}

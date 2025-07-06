@@ -1,0 +1,40 @@
+<h2>🧠 Root Cause Analysis Report: logs/sample.log</h2>
+
+
+<div style="border: 1px solid #ccc; margin: 15px; padding: 10px;">
+  <p><b>❌ Error:</b> [2024-06-30 10:01:28] ERROR: ValueError: could not convert string to float: 'N/A'</p>
+  <p><b>📌 Category:</b> Unknown</p>
+  <p><b>💡 Fix Suggestion:</b> This error occurs when there is an attempt to convert a string value 'N/A' to a float data type, which is not possible because 'N/A' is not a numerical value that can be converted to a float.
+
+To fix this error, you can first check for any instances of 'N/A' in the data and handle them appropriately. One approach could be to replace the 'N/A' values with a default numerical value (e.g., 0) before converting the strings to float. This way, the conversion process will not encounter any non-numeric values and will not raise a ValueError.</p>
+</div>
+
+<div style="border: 1px solid #ccc; margin: 15px; padding: 10px;">
+  <p><b>❌ Error:</b> ValueError: could not convert string to float: 'N/A'</p>
+  <p><b>📌 Category:</b> Unknown</p>
+  <p><b>💡 Fix Suggestion:</b> This error occurs when you are trying to convert a string to a float value, but the string contains a value that cannot be converted to a number (such as 'N/A').
+
+To fix this error, you can add a check to handle this special case and skip the conversion for 'N/A' values. For example, you can convert the string to a float only if it contains a numeric value:
+
+```python
+value = 'N/A'
+
+if value != 'N/A':
+    float_value = float(value)
+else:
+    float_value = None
+``` 
+
+Alternatively, you can replace the 'N/A' values with a default float value before converting the string:
+
+```python
+value = 'N/A'
+
+if value != 'N/A':
+    float_value = float(value)
+else:
+    float_value = 0.0
+``` 
+
+By adding this check or replacing the 'N/A' values, you can avoid the ValueError and successfully convert strings to float values.</p>
+</div>
