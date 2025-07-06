@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader
 load_dotenv()
 logger = get_logger("rca_engine")
 
-# Configure OpenAI API key and client (for openai>=1.0.0)
+# Configure OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Root cause classifier
@@ -23,7 +23,7 @@ def classify_root_cause(error_message: str) -> str:
         return "Infrastructure Issue"
     return "Unknown"
 
-# LLM-powered suggestion using openai>=1.0.0 syntax
+# LLM-powered suggestion
 def suggest_fix(error_message: str) -> str:
     try:
         prompt = f"Explain this error and suggest a fix:\n{error_message}"
@@ -38,8 +38,8 @@ def suggest_fix(error_message: str) -> str:
         logger.error(f"❌ LLM suggestion failed: {e}")
         return "No suggestion available."
 
-# Main report generator
-def generate_rca_report(log_path, output_path="reports/rca_summary.html"):
+# Main RCA report generator
+def generate_rca_report(log_path, output_path="reports/rca_report.html"):
     with open(log_path, "r") as f:
         lines = f.readlines()
 
@@ -55,11 +55,10 @@ def generate_rca_report(log_path, output_path="reports/rca_summary.html"):
             "suggestion": suggestion
         })
 
-    # Set correct template directory for Jinja2
+    # Jinja2 template loading
     template_path = os.path.join(os.path.dirname(__file__), "rca_template.html")
     env = Environment(loader=FileSystemLoader(os.path.dirname(template_path)))
     template = env.get_template("rca_template.html")
-
 
     html = template.render(errors=rca_results, log_file=log_path)
     os.makedirs("reports", exist_ok=True)
@@ -67,3 +66,8 @@ def generate_rca_report(log_path, output_path="reports/rca_summary.html"):
         f.write(html)
 
     logger.info(f"✅ RCA report saved at {output_path}")
+    return rca_results  # 🔁 RETURN the parsed issues
+
+# Exposed callable
+def run_rca(log_path: str = "logs/sample.log", output_path: str = "reports/rca_report.html") -> list:
+    return generate_rca_report(log_path, output_path)

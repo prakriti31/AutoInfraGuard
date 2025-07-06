@@ -39,3 +39,9 @@ Alternatively, you can pin your installation to the old version, e.g. `pip insta
 A detailed migration guide is available here: https://github.com/openai/openai-python/discussions/742
 
 2025-07-06 15:03:55,051 [INFO] ✅ RCA report saved at reports/rca_summary.html
+2025-07-06 15:29:50,393 [INFO] ✅ RCA report saved at reports/rca_report.html
+2025-07-06 15:30:34,757 [INFO] ✅ RCA report saved at reports/rca_report.html
+2025-07-06 15:33:19,007 [INFO] ✅ RCA report saved at reports/rca_report.html
+2025-07-06 15:34:12,327 [INFO] ✅ RCA report saved at reports/rca_report.html
+2025-07-06 15:34:12,328 [INFO] ℹ️ Manual review needed for issue: [2024-06-30 10:01:28] ERROR: ValueError: could not convert string to float: 'N/A'
+2025-07-06 15:34:12,328 [INFO] ℹ️ Manual review needed for issue: ValueError: could not convert string to float: 'N/A'

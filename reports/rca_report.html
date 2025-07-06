@@ -1,0 +1,42 @@
+<h2>🧠 Root Cause Analysis Report: logs/sample.log</h2>
+
+
+<div style="border: 1px solid #ccc; margin: 15px; padding: 10px;">
+  <p><b>❌ Error:</b> [2024-06-30 10:01:28] ERROR: ValueError: could not convert string to float: 'N/A'</p>
+  <p><b>📌 Category:</b> Unknown</p>
+  <p><b>💡 Fix Suggestion:</b> This error is occurring because the code is attempting to convert a string value 'N/A' to a float, which is not possible. 'N/A' is not a numeric value and cannot be converted to a float.
+
+To fix this error, you can add a check before attempting to convert the string to a float. You can check if the string is equal to 'N/A' and handle it accordingly. For example, you can replace 'N/A' with a default value or skip that particular value altogether. 
+
+Here is an example of how you can handle this error:
+
+```
+value = 'N/A'
+if value == 'N/A':
+    # handle the case where the value is 'N/A'
+    pass
+else:
+    float_value = float(value)
+``` 
+
+By adding this check, you can prevent the ValueError from occurring when trying to convert 'N/A' to a float.</p>
+</div>
+
+<div style="border: 1px solid #ccc; margin: 15px; padding: 10px;">
+  <p><b>❌ Error:</b> ValueError: could not convert string to float: 'N/A'</p>
+  <p><b>📌 Category:</b> Unknown</p>
+  <p><b>💡 Fix Suggestion:</b> This error occurs when you are trying to convert a string that contains the text 'N/A' into a float value. Since 'N/A' is not a valid numerical value, Python is unable to convert it into a float.
+
+To fix this error, you should handle this special case separately in your code. One way to do this is to check if the string is 'N/A' before converting it to a float. If it is 'N/A', you can assign a default float value or handle it in a way that is appropriate for your application. For example:
+
+```
+value_str = 'N/A'
+
+if value_str == 'N/A':
+    value = 0.0  # assign a default value
+else:
+    value = float(value_str)
+``` 
+
+By adding this check, you can handle the case where the string is 'N/A' and prevent the ValueError from occurring.</p>
+</div>
