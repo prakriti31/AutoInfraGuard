@@ -570,3 +570,81 @@ pip install openai jinja2
 
 ---
 
+Here’s your updated **README section for Phase 5: Self-Healing Automation** for your **AutoInfraGuard** project:
+
+---
+
+## 🧠 Phase 5: Self-Healing Automation
+
+AutoInfraGuard now supports **automatic root cause analysis (RCA)** and **self-healing actions** based on log diagnostics. It attempts to classify and fix pipeline errors using LLMs and rule-based strategies.
+
+---
+
+### ✅ Features
+
+* Runs RCA on the latest logs
+* Classifies and extracts root causes
+* Suggests fixes using OpenAI (LLM-powered)
+* Executes auto-healing logic for certain issues
+* Logs actions and flags manual intervention when needed
+
+---
+
+### 🛠️ How to Run Phase 5
+
+Ensure your `.env` contains your OpenAI key:
+
+```bash
+OPENAI_API_KEY=sk-xxxxx...
+```
+
+Ensure your virtual environment is activated:
+
+```bash
+source venv/bin/activate
+```
+
+Then run the self-healer:
+
+```bash
+python -m app.auto_healer
+```
+
+This will:
+
+* Parse the latest logs from `logs/sample.log`
+* Generate an RCA report at `reports/rca_report.html`
+* Apply automated fixes for:
+
+  * **Missing values**
+  * **Known inference errors**
+* Log unresolved issues for manual review
+
+---
+
+### 📂 Project Files Used in This Phase
+
+| File                              | Purpose                                |
+| --------------------------------- | -------------------------------------- |
+| `app/auto_healer.py`              | Main controller for RCA + self-healing |
+| `app/rca_engine.py`               | Log summarization and LLM-powered RCA  |
+| `app/templates/rca_template.html` | HTML template for RCA report           |
+| `logs/sample.log`                 | Source logs for RCA                    |
+| `reports/rca_report.html`         | Output RCA report                      |
+
+---
+
+### 🔁 Example Output
+
+```text
+[INFO] ✅ RCA report saved at reports/rca_report.html
+[INFO] ℹ️ Manual review needed for issue: ValueError: could not convert string to float: 'N/A'
+```
+
+---
+
+### 🧩 Customizing
+
+You can customize which types of issues are auto-healed vs. flagged in `app/auto_healer.py` by editing the rule logic inside the `auto_heal()` function.
+
+---
